@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Lacak Paket</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f6fb;
+      color: #172033;
+    }
+
+    .top {
+      background: linear-gradient(135deg, #111827, #273449);
+      color: white;
+      padding: 30px 20px 60px;
+      text-align: center;
+    }
+
+    .top h1 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .top p {
+      margin: 7px 0 0;
+      color: #d7deea;
+      font-size: 13px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: -36px auto 30px;
+      padding: 0 13px;
+      position: relative;
+    }
+
+    .search-box {
+      background: white;
+      border-radius: 15px;
+      padding: 17px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, .10);
+    }
+
+    .field {
+      margin-bottom: 13px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #344054;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #d8dee8;
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 14px;
+      outline: none;
+      background: white;
+      color: #172033;
+    }
+
+    select:focus,
+    textarea:focus {
+      border-color: #64748b;
+      box-shadow: 0 0 0 3px rgba(100, 116, 139, .10);
+    }
+
+    textarea {
+      min-height: 125px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .counter {
+      margin-top: 5px;
+      color: #7b8494;
+      font-size: 11px;
+    }
+
+    .track-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px;
+      background: #111827;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .track-btn:hover {
+      background: #1f2937;
+    }
+
+    .track-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    #hasil {
+      margin-top: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 17px;
+      margin-bottom: 14px;
+      box-shadow: 0 5px 18px rgba(15, 23, 42, .07);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 11px;
+      margin-bottom: 13px;
+      border-bottom: 1px solid #edf0f5;
+    }
+
+    .card-title h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .number {
+      font-size: 11px;
+      color: #8a94a6;
+    }
+
+    .info-row {
+      margin-bottom: 10px;
+    }
+
+    .info-label {
+      display: block;
+      color: #7a8494;
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1d2939;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 16px;
+      background: #e9f8ef;
+      color: #18794e;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .history-btn {
+      width: 100%;
+      border: 1px solid #dce2ea;
+      background: #f8fafc;
+      color: #344054;
+      border-radius: 9px;
+      padding: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 2px;
+    }
+
+    .history-btn:hover {
+      background: #f1f5f9;
+    }
+
+    .history {
+      display: none;
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px solid #edf0f5;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 19px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      background: #dce2ea;
+    }
+
+    .event {
+      position: relative;
+      padding-bottom: 14px;
+    }
+
+    .event:last-child {
+      padding-bottom: 0;
+    }
+
+    .event::before {
+      content: "";
+      position: absolute;
+      left: -19px;
+      top: 3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #111827;
+      border: 2px solid white;
+      box-shadow: 0 0 0 1px #cbd5e1;
+    }
+
+    .event-date {
+      font-size: 10px;
+      color: #8a94a6;
+      margin-bottom: 3px;
+    }
+
+    .event-desc {
+      font-size: 12px;
+      line-height: 1.45;
+      color: #344054;
+    }
+
+    .event-location {
+      margin-top: 3px;
+      font-size: 10px;
+      color: #98a2b3;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 18px;
+      color: #7b8494;
+      font-size: 13px;
+    }
+
+    .error {
+      padding: 11px;
+      border-radius: 9px;
+      background: #fff0f0;
+      color: #b42318;
+      font-size: 13px;
+    }
+
+    .empty {
+      color: #8a94a6;
+      font-size: 12px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #98a2b3;
+      font-size: 11px;
+      padding: 7px 0 18px;
+    }
+
+    @media (max-width: 480px) {
+
+      .top {
+        padding-top: 27px;
+        padding-bottom: 57px;
+      }
+
+      .top h1 {
+        font-size: 24px;
+      }
+
+      .top p {
+        font-size: 12px;
+      }
+
+      .container {
+        padding: 0 11px;
+      }
+
+      .search-box {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top">
+    <h1>Lacak Paket</h1>
+    <p>Pantau perjalanan paket Anda dengan mudah</p>
+  </div>
+
+  <main class="container">
+
+    <section class="search-box">
+
+      <div class="field">
+        <label for="courier">Ekspedisi</label>
+
+        <select id="courier">
+          <option value="jne">JNE</option>
+          <option value="jnt">J&T Express</option>
+          <option value="sicepat">SiCepat</option>
+          <option value="anteraja">AnterAja</option>
+          <option value="pos">Pos Indonesia</option>
+          <option value="tiki">TIKI</option>
+          <option value="wahana">Wahana</option>
+          <option value="ninja">Ninja Xpress</option>
+          <option value="lion">Lion Parcel</option>
+          <option value="idexpress">ID Express</option>
+          <option value="spx">Shopee Express</option>
+          <option value="jnt_cargo">J&T Cargo</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="resi">Nomor Resi</label>
+
+        <textarea
+          id="resi"
+          placeholder="Masukkan nomor resi, satu nomor per baris
+
+Contoh:
+004639699228
+123456789
+987654321"></textarea>
+
+        <div class="counter">
+          Maksimal 55 nomor resi
+        </div>
+      </div>
+
+      <button
+        id="btnLacak"
+        class="track-btn"
+        onclick="lacakResi()">
+
+        Lacak Paket
+
+      </button>
+
+    </section>
+
+    <div id="hasil"></div>
+
+    <div class="footer">
+      Sistem pelacakan paket
+    </div>
+
+  </main>
+
+
+<script>
+
+const WORKER_URL =
+  "https://proud-sun-00d0.adyoga65.workers.dev";
+
+
+async function lacakResi() {
+
+  const courier =
+    document.getElementById("courier").value;
+
+  const input =
+    document.getElementById("resi").value;
+
+  const hasil =
+    document.getElementById("hasil");
+
+  const button =
+    document.getElementById("btnLacak");
+
+
+  const resiList =
+    input
+      .split(/\r?\n/)
+      .map(x => x.trim())
+      .filter(x => x !== "");
+
+
+  if (resiList.length === 0) {
+
+    hasil.innerHTML =
+      '<div class="error">Masukkan nomor resi terlebih dahulu.</div>';
+
+    return;
+  }
+
+
+  if (resiList.length > 55) {
+
+    hasil.innerHTML =
+      '<div class="error">Maksimal 55 nomor resi.</div>';
+
+    return;
+  }
+
+
+  hasil.innerHTML = "";
+
+  button.disabled = true;
+
+  button.textContent =
+    "Memproses...";
+
+
+  for (let i = 0; i < resiList.length; i++) {
+
+    const awb =
+      resiList[i];
+
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "card";
+
+
+    card.innerHTML = `
+
+      <div class="card-title">
+
+        <h2>Detail Paket</h2>
+
+        <span class="number">
+          #${i + 1}
+        </span>
+
+      </div>
+
+      <div class="loading">
+        Memuat data paket...
+      </div>
+
+    `;
+
+
+    hasil.appendChild(card);
+
+
+    try {
+
+      const url =
+        `${WORKER_URL}/api/track` +
+        `?courier=${encodeURIComponent(courier)}` +
+        `&awb=${encodeURIComponent(awb)}`;
+
+
+      const response =
+        await fetch(url);
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message || "Tracking gagal"
+        );
+
+      }
+
+
+      card.innerHTML =
+        renderPaket(data, awb, i);
+
+
+    } catch (error) {
+
+      card.innerHTML = `
+
+        <div class="card-title">
+
+          <h2>Detail Paket</h2>
+
+          <span class="number">
+            #${i + 1}
+          </span>
+
+        </div>
+
+        <div class="error">
+
+          Gagal mengambil data tracking.
+
+          <br><br>
+
+          ${escapeHtml(error.message)}
+
+        </div>
+
+      `;
+
+    }
+
+  }
+
+
+  button.disabled = false;
+
+  button.textContent =
+    "Lacak Paket";
+}
+
+
+function renderPaket(data, awb, index) {
+
+  const paket =
+    data.data || {};
+
+  const summary =
+    paket.summary || {};
+
+  const detail =
+    paket.detail || {};
+
+  const history =
+    Array.isArray(paket.history)
+      ? paket.history
+      : [];
+
+
+  const receiver =
+    detail.receiver || "-";
+
+  const destination =
+    detail.destination || "-";
+
+  const resi =
+    summary.awb || awb;
+
+  const seller =
+    detail.shipper || "-";
+
+  const status =
+    summary.status || "-";
+
+
+  let historyHTML = "";
+
+
+  if (history.length === 0) {
+
+    historyHTML =
+      '<div class="empty">Riwayat perjalanan tidak tersedia.</div>';
+
+  } else {
+
+    historyHTML = `
+
+      <div class="timeline">
+
+        ${history.map(item => `
+
+          <div class="event">
+
+            <div class="event-date">
+              ${escapeHtml(item.date || "-")}
+            </div>
+
+            <div class="event-desc">
+              ${escapeHtml(item.desc || "-")}
+            </div>
+
+            ${
+              item.location
+              ? `
+                <div class="event-location">
+                  ${escapeHtml(item.location)}
+                </div>
+              `
+              : ""
+            }
+
+          </div>
+
+        `).join("")}
+
+      </div>
+
+    `;
+
+  }
+
+
+  return `
+
+    <div class="card-title">
+
+      <h2>Detail Paket</h2>
+
+      <span class="number">
+        #${index + 1}
+      </span>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <span class="info-label">
+        Nama Penerima
+      </span>
+
+      <span class="info-value">
+        ${escapeHtml(receiver)}
+      </span>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <span class="info-label">
+        Alamat
+      </span>
+
+      <span class="info-value">
+        ${escapeHtml(destination)}
+      </span>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <span class="info-label">
+        No Resi
+      </span>
+
+      <span class="info-value">
+        ${escapeHtml(resi)}
+      </span>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <span class="info-label">
+        Seller
+      </span>
+
+      <span class="info-value">
+        ${escapeHtml(seller)}
+      </span>
+
+    </div>
+
+
+    <div class="info-row">
+
+      <span class="info-label">
+        Status
+      </span>
+
+      <span class="status">
+        ${escapeHtml(status)}
+      </span>
+
+    </div>
+
+
+    <button
+      class="history-btn"
+      onclick="toggleHistory(${index})">
+
+      Lihat riwayat perjalanan
+
+    </button>
+
+
+    <div
+      id="history-${index}"
+      class="history">
+
+      ${historyHTML}
+
+    </div>
+
+  `;
+}
+
+
+function toggleHistory(index) {
+
+  const history =
+    document.getElementById(
+      `history-${index}`
+    );
+
+
+  if (history.style.display === "block") {
+
+    history.style.display = "none";
+
+  } else {
+
+    history.style.display = "block";
+
+  }
+
+}
+
+
+function escapeHtml(text) {
+
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+</script>
+
+</body>
+  </html>
